@@ -68,7 +68,7 @@ const TRANSPORTS: TransportFactory[] = [
 
 async function listen_for_notifications(
   notification_stream: ReadableStream<Notification>,
-  signal: AbortSignal
+  signal: AbortSignal,
 ): Promise<void> {
   let reader = notification_stream.getReader();
   const onAbort = () => {
@@ -93,7 +93,7 @@ async function listen_for_notifications(
       pub("rpc_notification", value);
 
       const subsystem = Object.entries(value).find(
-        ([_k, v]) => v !== undefined
+        ([_k, v]) => v !== undefined,
       );
       if (!subsystem) {
         continue;
@@ -126,7 +126,7 @@ async function connect(
   transport: RpcTransport,
   setConn: Dispatch<ConnectionState>,
   setConnectedDeviceName: Dispatch<string | undefined>,
-  signal: AbortSignal
+  signal: AbortSignal,
 ) {
   let conn = await create_rpc_connection(transport, { signal });
 
@@ -171,7 +171,7 @@ function App() {
   const [connectionAbort, setConnectionAbort] = useState(new AbortController());
 
   const [lockState, setLockState] = useState<LockState>(
-    LockState.ZMK_STUDIO_CORE_LOCK_STATE_LOCKED
+    LockState.ZMK_STUDIO_CORE_LOCK_STATE_LOCKED,
   );
 
   useSub("rpc_notification.core.lockStateChanged", (ls) => {
@@ -195,7 +195,7 @@ function App() {
 
       setLockState(
         locked_resp.core?.getLockState ||
-          LockState.ZMK_STUDIO_CORE_LOCK_STATE_LOCKED
+          LockState.ZMK_STUDIO_CORE_LOCK_STATE_LOCKED,
       );
     }
 

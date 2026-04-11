@@ -31,6 +31,9 @@ import { LockStateContext } from "../rpc/LockStateContext";
 import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
 import { deserializeLayoutZoom, LayoutZoom } from "./PhysicalLayout";
 import { useLocalStorageState } from "../misc/useLocalStorageState";
+import { Tooltip } from "../misc/Tooltip";
+import { Button } from "react-aria-components";
+import { FileDown, FileUp } from "lucide-react";
 
 type BehaviorMap = Record<number, GetBehaviorDetailsResponse>;
 
@@ -103,13 +106,13 @@ function useLayouts(): [
   PhysicalLayout[] | undefined,
   React.Dispatch<SetStateAction<PhysicalLayout[] | undefined>>,
   number,
-  React.Dispatch<SetStateAction<number>>
+  React.Dispatch<SetStateAction<number>>,
 ] {
   let connection = useContext(ConnectionContext);
   let lockState = useContext(LockStateContext);
 
   const [layouts, setLayouts] = useState<PhysicalLayout[] | undefined>(
-    undefined
+    undefined,
   );
   const [selectedPhysicalLayoutIndex, setSelectedPhysicalLayoutIndex] =
     useState<number>(0);
@@ -137,7 +140,7 @@ function useLayouts(): [
       if (!ignore) {
         setLayouts(response?.keymap?.getPhysicalLayouts?.layouts);
         setSelectedPhysicalLayoutIndex(
-          response?.keymap?.getPhysicalLayouts?.activeLayoutIndex || 0
+          response?.keymap?.getPhysicalLayouts?.activeLayoutIndex || 0,
         );
       }
     }
@@ -171,12 +174,16 @@ export default function Keyboard() {
       console.log("Got the keymap!");
       return keymap?.keymap?.getKeymap;
     },
-    true
+    true,
   );
 
-  const [keymapScale, setKeymapScale] = useLocalStorageState<LayoutZoom>("keymapScale", "auto", {
-    deserialize: deserializeLayoutZoom,
-  });
+  const [keymapScale, setKeymapScale] = useLocalStorageState<LayoutZoom>(
+    "keymapScale",
+    "auto",
+    {
+      deserialize: deserializeLayoutZoom,
+    },
+  );
 
   const [selectedLayerIndex, setSelectedLayerIndex] = useState<number>(0);
   const [selectedKeyPosition, setSelectedKeyPosition] = useState<
@@ -208,7 +215,7 @@ export default function Keyboard() {
       } else {
         console.error(
           "Failed to set the active physical layout err:",
-          resp?.keymap?.setActivePhysicalLayout?.err
+          resp?.keymap?.setActivePhysicalLayout?.err,
         );
       }
     }
@@ -227,14 +234,14 @@ export default function Keyboard() {
         };
       });
     },
-    [undoRedo, selectedPhysicalLayoutIndex]
+    [undoRedo, selectedPhysicalLayoutIndex],
   );
 
   let doUpdateBinding = useCallback(
     (binding: BehaviorBinding) => {
       if (!keymap || selectedKeyPosition === undefined) {
         console.error(
-          "Can't update binding without a selected key position and loaded keymap"
+          "Can't update binding without a selected key position and loaded keymap",
         );
         return;
       }
@@ -259,7 +266,7 @@ export default function Keyboard() {
           setKeymap(
             produce((draft: any) => {
               draft.layers[layer].bindings[keyPosition] = binding;
-            })
+            }),
           );
         } else {
           console.error("Failed to set binding", resp.keymap?.setLayerBinding);
@@ -282,18 +289,22 @@ export default function Keyboard() {
             setKeymap(
               produce((draft: any) => {
                 draft.layers[layer].bindings[keyPosition] = oldBinding;
-              })
+              }),
             );
           } else {
           }
         };
       });
     },
-    [conn, keymap, undoRedo, selectedLayerIndex, selectedKeyPosition]
+    [conn, keymap, undoRedo, selectedLayerIndex, selectedKeyPosition],
   );
 
   let selectedBinding = useMemo(() => {
-    if (keymap == null || selectedKeyPosition == null || !keymap.layers[selectedLayerIndex]) {
+    if (
+      keymap == null ||
+      selectedKeyPosition == null ||
+      !keymap.layers[selectedLayerIndex]
+    ) {
       return null;
     }
 
@@ -324,7 +335,7 @@ export default function Keyboard() {
         return () => doMove(end, start);
       });
     },
-    [undoRedo]
+    [undoRedo],
   );
 
   const addLayer = useCallback(() => {
@@ -341,7 +352,7 @@ export default function Keyboard() {
           produce((draft: any) => {
             draft.layers.push(resp.keymap!.addLayer!.ok!.layer);
             draft.availableLayers--;
-          })
+          }),
         );
 
         setSelectedLayerIndex(newSelection);
@@ -368,12 +379,12 @@ export default function Keyboard() {
           produce((draft: any) => {
             draft.layers.splice(layerIndex, 1);
             draft.availableLayers++;
-          })
+          }),
         );
       } else {
         console.error("Remove error", resp.keymap?.removeLayer?.err);
         throw new Error(
-          "Failed to remove layer:" + resp.keymap?.removeLayer?.err
+          "Failed to remove layer:" + resp.keymap?.removeLayer?.err,
         );
       }
     }
@@ -402,12 +413,12 @@ export default function Keyboard() {
           produce((draft: any) => {
             draft.layers.splice(layerIndex, 1);
             draft.availableLayers++;
-          })
+          }),
         );
       } else {
         console.error("Remove error", resp.keymap?.removeLayer?.err);
         throw new Error(
-          "Failed to remove layer:" + resp.keymap?.removeLayer?.err
+          "Failed to remove layer:" + resp.keymap?.removeLayer?.err,
         );
       }
     }
@@ -427,13 +438,13 @@ export default function Keyboard() {
           produce((draft: any) => {
             draft.layers.splice(atIndex, 0, resp!.keymap!.restoreLayer!.ok);
             draft.availableLayers--;
-          })
+          }),
         );
         setSelectedLayerIndex(atIndex);
       } else {
         console.error("Remove error", resp.keymap?.restoreLayer?.err);
         throw new Error(
-          "Failed to restore layer:" + resp.keymap?.restoreLayer?.err
+          "Failed to restore layer:" + resp.keymap?.restoreLayer?.err,
         );
       }
     }
@@ -468,14 +479,14 @@ export default function Keyboard() {
           setKeymap(
             produce((draft: any) => {
               const layer_index = draft.layers.findIndex(
-                (l: Layer) => l.id == layerId
+                (l: Layer) => l.id == layerId,
               );
               draft.layers[layer_index].name = name;
-            })
+            }),
           );
         } else {
           throw new Error(
-            "Failed to change layer name:" + resp.keymap?.setLayerProps
+            "Failed to change layer name:" + resp.keymap?.setLayerProps,
           );
         }
       }
@@ -487,7 +498,7 @@ export default function Keyboard() {
         };
       });
     },
-    [conn, undoRedo, keymap]
+    [conn, undoRedo, keymap],
   );
 
   useEffect(() => {
@@ -499,6 +510,60 @@ export default function Keyboard() {
       setSelectedLayerIndex(layers);
     }
   }, [keymap, selectedLayerIndex]);
+
+  const onExport = useCallback(async () => {
+    await navigator.clipboard.writeText(JSON.stringify(keymap));
+  }, [keymap]);
+  const onImport = useCallback(async () => {
+    const text = await navigator.clipboard.readText();
+    if (!keymap || !conn.conn) return;
+    let currentLayerMap = keymap.layers.reduce(
+      (acc, layer) => {
+        acc[layer.id] = layer;
+        return acc;
+      },
+      {} as Record<string, (typeof keymap.layers)[0]>,
+    );
+    const importedKeymap = JSON.parse(text);
+    let bindingEq = (a: BehaviorBinding, b: BehaviorBinding) => {
+      return (
+        a.behaviorId === b.behaviorId &&
+        a.param1 === b.param1 &&
+        a.param2 === b.param2
+      );
+    };
+    for (const layer of importedKeymap.layers) {
+      let existingLayer = currentLayerMap[layer.id];
+      if (!existingLayer) {
+        console.log("Invalid keymap import: layer id not found", layer.id);
+        continue;
+      }
+      for (let i = 0; i < existingLayer.bindings.length; i++) {
+        if (i >= layer.bindings.length) break;
+        if (!bindingEq(existingLayer.bindings[i], layer.bindings[i])) {
+          let resp = await call_rpc(conn.conn, {
+            keymap: {
+              setLayerBinding: {
+                layerId: layer.id,
+                keyPosition: i,
+                binding: layer.bindings[i],
+              },
+            },
+          });
+          if (
+            resp.keymap?.setLayerBinding ===
+            SetLayerBindingResponse.SET_LAYER_BINDING_RESP_OK
+          ) {
+            setKeymap(
+              produce((draft: any) => {
+                draft.layers[layer.id].bindings[i] = layer.bindings[i];
+              }),
+            );
+          }
+        }
+      }
+    }
+  }, [keymap, conn]);
 
   return (
     <div className="grid grid-cols-[auto_1fr] grid-rows-[1fr_minmax(10em,auto)] bg-base-300 max-w-full min-w-0 min-h-0">
@@ -540,23 +605,44 @@ export default function Keyboard() {
             selectedKeyPosition={selectedKeyPosition}
             onKeyPositionClicked={setSelectedKeyPosition}
           />
-          <select
-            className="absolute top-2 right-2 h-8 rounded px-2"
-            value={keymapScale}
-            onChange={(e) => {
-              const value = deserializeLayoutZoom(e.target.value);
-              setKeymapScale(value);
-            }}
-          >
-            <option value="auto">Auto</option>
-            <option value={0.25}>25%</option>
-            <option value={0.5}>50%</option>
-            <option value={0.75}>75%</option>
-            <option value={1}>100%</option>
-            <option value={1.25}>125%</option>
-            <option value={1.5}>150%</option>
-            <option value={2}>200%</option>
-          </select>
+          <div className="absolute top-2 right-2">
+            <Tooltip label="Export">
+              <Button
+                className="flex items-center justify-center p-1.5 rounded enabled:hover:bg-base-300 disabled:opacity-50"
+                onPress={onExport}
+              >
+                <FileUp className="inline-block w-4 mx-1" aria-label="Export" />
+              </Button>
+            </Tooltip>
+            <Tooltip label="Import">
+              <Button
+                className="flex items-center justify-center p-1.5 rounded enabled:hover:bg-base-300 disabled:opacity-50"
+                onPress={onImport}
+              >
+                <FileDown
+                  className="inline-block w-4 mx-1"
+                  aria-label="Import"
+                />
+              </Button>
+            </Tooltip>
+            <select
+              className="h-8 rounded px-2"
+              value={keymapScale}
+              onChange={(e) => {
+                const value = deserializeLayoutZoom(e.target.value);
+                setKeymapScale(value);
+              }}
+            >
+              <option value="auto">Auto</option>
+              <option value={0.25}>25%</option>
+              <option value={0.5}>50%</option>
+              <option value={0.75}>75%</option>
+              <option value={1}>100%</option>
+              <option value={1.25}>125%</option>
+              <option value={1.5}>150%</option>
+              <option value={2}>200%</option>
+            </select>
+          </div>
         </div>
       )}
       {keymap && selectedBinding && (
