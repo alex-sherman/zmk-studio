@@ -1,3 +1,4 @@
+@config "../tailwind.config.js";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,10 +9,21 @@
     src: url("/Inter.woff2") format("woff2");
     font-display: fallback;
   }
+
+  :root {
+    --green-primary: #3f8946;
+    --green-bright: #0cce61;
+    --green-dark: #175c35;
+    --bg-main: #1b1d1e;
+    --bg-card: #242729;
+    --bg-card-hover: #2b2f32;
+    --bg-code-block: #161819;
+    --text-main: #dadde1;
+  }
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: dark;
 }
 
 #root {
@@ -25,4 +37,52 @@ body {
 
   width: 100vw;
   height: 100vh;
+  background-color: #1b1d1e;
+  color: #dadde1;
+}
+
+@layer utilities {
+  .bg-primary,
+  .hover\:bg-primary:hover,
+  .aria-selected\:bg-primary[aria-selected="true"],
+  .rac-selected\:bg-primary[data-selected] {
+    background-color: #3f8946 !important;
+  }
+
+  .text-primary-content,
+  .hover\:text-primary-content:hover,
+  .aria-selected\:text-primary-content[aria-selected="true"],
+  .rac-selected\:text-primary-content[data-selected] {
+    color: #f4f7f5 !important;
+  }
+
+  .text-primary,
+  .hover\:text-primary:hover {
+    color: #0cce61 !important;
+  }
+
+  .border-primary {
+    border-color: #3f8946 !important;
+  }
+
+  .border-secondary,
+  .hover\:border-secondary:hover {
+    border-color: #0cce61 !important;
+  }
+
+  .ring-secondary\/40,
+  .ring-primary\/40 {
+    --tw-ring-color: rgba(12, 206, 97, 0.45) !important;
+  }
+}
+
+*,
+::before,
+::after {
+  --tw-ring-color: rgba(12, 206, 97, 0.45);
+}
+
+*:focus,
+*:focus-visible {
+  outline-color: #0cce61;
 }

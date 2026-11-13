@@ -48,15 +48,24 @@ export const Key = ({
 
   return (
     <button
-      className={`group rounded relative flex justify-center items-center cursor-pointer transition-all hover:shadow-xl hover:ring-1 hover:ring-gray-300 hover:scale-125 ${selected ? "bg-primary text-primary-content" : "bg-base-100 text-base-content"
-        }`}
+      className={`group rounded-md relative flex justify-center items-center cursor-pointer transition-all border focus:outline-none hover:shadow-xl hover:border-secondary hover:scale-125 ${
+        selected
+          ? "bg-primary text-primary-content border-secondary ring-2 ring-secondary/40 shadow-md"
+          : "bg-base-100 text-base-content border-white/10 hover:bg-[#2b2f32]"
+      }`}
       style={{
         width: `${pixelWidth}px`,
         height: `${pixelHeight}px`,
       }}
       onClick={onClick}
     >
-      <div className={`absolute text-xs ${selected ? "text-primary-content" : "z1text-base-content"} opacity-80 top-1 text-nowrap left-1/2 font-light -translate-x-1/2 text-center`}>{shortenHeader(header)}</div>
+      <div
+        className={`absolute text-xs ${
+          selected ? "text-primary-content/85" : "text-base-content/60"
+        } top-1 text-nowrap left-1/2 font-normal -translate-x-1/2 text-center`}
+      >
+        {shortenHeader(header)}
+      </div>
       {children}
     </button>
   );

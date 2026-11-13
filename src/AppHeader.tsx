@@ -65,10 +65,10 @@ export const AppHeader = ({
   );
 
   return (
-    <header className="top-0 left-0 right-0 grid grid-cols-[1fr_auto_1fr] items-center justify-between h-10 max-w-full">
-      <div className="flex px-3 items-center gap-1">
-        <img src="/zmk.svg" alt="ZMK Logo" className="h-8 rounded" />
-        <p>Studio</p>
+    <header className="top-0 left-0 right-0 grid grid-cols-[1fr_auto_1fr] items-center justify-between h-11 max-w-full bg-gradient-to-br from-[#3f8946] to-[#175c35] text-white border-b border-white/15 shadow-md">
+      <div className="flex px-3 items-center gap-2">
+        <img src="/zmk.svg" alt="ZMK Logo" className="h-7 rounded" />
+        <p className="font-semibold tracking-tight text-white">Studio</p>
       </div>
       <GenericModal ref={showSettingsRef} className="max-w-[50vw]">
         <h2 className="my-2 text-lg">Restore Stock Settings</h2>
@@ -99,11 +99,11 @@ export const AppHeader = ({
       </GenericModal>
       <MenuTrigger>
         <Button
-          className="text-center rac-disabled:opacity-0 hover:bg-base-300 transition-all duration-100 p-1 pl-2 rounded-lg"
+          className="text-center rac-disabled:opacity-0 bg-black/20 hover:bg-black/40 border border-white/20 hover:border-white/45 text-white font-medium transition-all duration-150 py-1 px-3 rounded-full"
           isDisabled={!connectedDeviceLabel}
         >
           {connectedDeviceLabel}
-          <ChevronDown className="inline-block w-4" />
+          <ChevronDown className="inline-block w-4 ml-1" />
         </Button>
         <Popover>
           <Menu className="shadow-md rounded bg-base-100 text-base-content cursor-pointer overflow-hidden">
