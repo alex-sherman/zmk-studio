@@ -509,7 +509,14 @@ export default function Keyboard() {
     if (selectedLayerIndex > layers) {
       setSelectedLayerIndex(layers);
     }
-  }, [keymap, selectedLayerIndex]);
+
+    if (
+      selectedKeyPosition === undefined &&
+      keymap.layers[selectedLayerIndex]?.bindings?.length > 0
+    ) {
+      setSelectedKeyPosition(0);
+    }
+  }, [keymap, selectedLayerIndex, selectedKeyPosition]);
 
   const onExport = useCallback(async () => {
     await navigator.clipboard.writeText(JSON.stringify(keymap));
@@ -595,7 +602,7 @@ export default function Keyboard() {
         )}
       </div>
       {layouts && keymap && behaviors && (
-        <div className="p-2 col-start-2 row-start-1 grid items-center justify-center relative min-w-0">
+        <div className="p-2 col-start-2 row-start-1 grid items-center justify-center relative min-w-0 min-h-0 overflow-hidden">
           <KeymapComp
             keymap={keymap}
             layout={layouts[selectedPhysicalLayoutIndex]}
@@ -646,7 +653,7 @@ export default function Keyboard() {
         </div>
       )}
       {keymap && selectedBinding && (
-        <div className="p-2 col-start-2 row-start-2 bg-base-200">
+        <div className="p-3 col-start-2 row-start-2 bg-base-200 border-t border-base-300 min-w-0 overflow-x-hidden">
           <BehaviorBindingPicker
             binding={selectedBinding}
             behaviors={Object.values(behaviors)}

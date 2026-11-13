@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Example: Story = {
   args: {
-    binding: { behaviorId: 0, param1: 0, param2: 0 },
+    binding: { behaviorId: 0, param1: 0x070004, param2: 0 },
     behaviors: [
       {
         id: 0,
@@ -39,11 +39,75 @@ export const Example: Story = {
         metadata: [
           {
             param1: [
-              { name: "Key", hidUsage: { consumerMax: 0, keyboardMax: 0 } },
+              { name: "Key", hidUsage: { consumerMax: 512, keyboardMax: 231 } },
             ],
             param2: [],
           },
         ],
+      },
+      {
+        id: 1,
+        displayName: "Transparent",
+        metadata: [],
+      },
+      {
+        id: 2,
+        displayName: "None",
+        metadata: [],
+      },
+      {
+        id: 3,
+        displayName: "Momentary Layer",
+        metadata: [
+          {
+            param1: [{ name: "Layer", layerId: {} }],
+            param2: [],
+          },
+        ],
+      },
+      {
+        id: 4,
+        displayName: "Toggle Layer",
+        metadata: [
+          {
+            param1: [{ name: "Layer", layerId: {} }],
+            param2: [],
+          },
+        ],
+      },
+      {
+        id: 5,
+        displayName: "Layer-Tap",
+        metadata: [
+          {
+            param1: [{ name: "Layer", layerId: {} }],
+            param2: [
+              { name: "Key", hidUsage: { consumerMax: 512, keyboardMax: 231 } },
+            ],
+          },
+        ],
+      },
+      {
+        id: 6,
+        displayName: "Sticky Key",
+        metadata: [
+          {
+            param1: [
+              { name: "Key", hidUsage: { consumerMax: 512, keyboardMax: 231 } },
+            ],
+            param2: [],
+          },
+        ],
+      },
+      {
+        id: 7,
+        displayName: "Studio Unlock",
+        metadata: [],
+      },
+      {
+        id: 8,
+        displayName: "Bootloader",
+        metadata: [],
       },
     ],
   },

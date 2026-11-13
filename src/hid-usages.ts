@@ -50,3 +50,30 @@ export const hid_usage_get_labels = (
       (u) => u.Id === usage_id
     )?.Name,
   };
+
+const IMPLICIT_MOD_SHORT_NAMES: { flag: number; short: string }[] = [
+  { flag: 0x01, short: "LCtrl" },
+  { flag: 0x02, short: "LShift" },
+  { flag: 0x04, short: "LAlt" },
+  { flag: 0x08, short: "LGUI" },
+  { flag: 0x10, short: "RCtrl" },
+  { flag: 0x20, short: "RShift" },
+  { flag: 0x40, short: "RAlt" },
+  { flag: 0x80, short: "RGUI" },
+];
+
+export const format_hid_usage_display = (usage?: number): string => {
+  if (!usage) return "None";
+  const [rawPage, id] = hid_usage_page_and_id_from_usage(usage);
+  const page = rawPage & 0xff;
+  const modFlags = (usage >>> 24) & 0xff;
+  const baseLabel =
+    hid_usage_get_label(page, id)?.replace(/^Keyboard /, "") ||
+    `Page ${page} #${id}`;
+
+  if (!modFlags) return baseLabel;
+  const activeMods = IMPLICIT_MOD_SHORT_NAMES.filter(
+    (m) => (modFlags & m.flag) !== 0
+  ).map((m) => m.short);
+  return `${activeMods.join(" + ")} + ${baseLabel}`;
+};
