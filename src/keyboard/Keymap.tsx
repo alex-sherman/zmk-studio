@@ -48,11 +48,37 @@ export const Keymap = ({
       };
     }
 
+    const binding = keymap.layers[selectedLayerIndex].bindings[i];
+    const behavior = behaviors[binding.behaviorId];
+    const isLayerParam1 = behavior?.metadata?.some((s) =>
+      s.param1?.some((p) => p.layerId !== undefined),
+    );
+    const isHidParam2 = behavior?.metadata?.some((s) =>
+      s.param2?.some((p) => p.hidUsage !== undefined),
+    );
+    const targetLayerName = isLayerParam1
+      ? keymap.layers.find((l) => l.id === binding.param1)?.name ||
+        `${binding.param1}`
+      : undefined;
+
+    let children = <HidUsageLabel hid_usage={binding.param1} />;
+    if (isLayerParam1 && !isHidParam2) {
+      children = (
+        <span className="text-xs font-medium leading-tight truncate max-w-full px-1 mt-3">
+          {targetLayerName}
+        </span>
+      );
+    } else if (isLayerParam1 && isHidParam2) {
+      children = (
+        <span className="mt-3">
+          <HidUsageLabel hid_usage={binding.param2} />
+        </span>
+      );
+    }
+
     return {
       id: `${keymap.layers[selectedLayerIndex].id}-${i}`,
-      header:
-        behaviors[keymap.layers[selectedLayerIndex].bindings[i].behaviorId]
-          ?.displayName || "Unknown",
+      header: behavior?.displayName || "Unknown",
       x: k.x / 100.0,
       y: k.y / 100.0,
       width: k.width / 100,
@@ -60,11 +86,7 @@ export const Keymap = ({
       r: (k.r || 0) / 100.0,
       rx: (k.rx || 0) / 100.0,
       ry: (k.ry || 0) / 100.0,
-      children: (
-        <HidUsageLabel
-          hid_usage={keymap.layers[selectedLayerIndex].bindings[i].param1}
-        />
-      ),
+      children,
     };
   });
 

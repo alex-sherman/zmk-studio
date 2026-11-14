@@ -5,7 +5,7 @@
     "Grave/Escape": {"short": "Grv/Esc"},
     "Key Repeat": {"short": "Key Rept"},
     "Key Toggle": {"short": "Key Togg"},
-    "Momentary Layer": {"short": "MLayer"},
+    "Momentary Layer": {"short": "Layer:"},
     "Output Selection": {"short": "OutputSel"},
     "Sticky Key": {"short": "Stcky Key"},
     "Studio Unlock": {"short": "Unlock"},
